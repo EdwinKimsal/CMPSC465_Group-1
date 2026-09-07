@@ -84,6 +84,7 @@ void display_hash_map(struct HashMap* map) {
         }
         printf("]\n");
     }
+    printf("\n");
 }
 
 
