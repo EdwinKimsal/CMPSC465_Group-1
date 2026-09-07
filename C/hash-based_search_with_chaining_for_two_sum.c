@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 // Node structure for linked lists
 struct LinkedList_Node {
-    char val;
+    int val;
     struct LinkedList_Node* next;
 };
 
@@ -39,13 +40,13 @@ struct HashMap* create_hash_map(int size) {
 
 
 // Computes and returns the index for a given value in the HashMap
-int hash_map_function(char val, int size) {
-    return (unsigned char)val % size;
+int hash_map_function(int val, int size) {
+    return (unsigned int)val % size;
 }
 
 
 // Inserts a value into the linked list at the given head pointer
-void insert_to_linked_list(struct LinkedList_Node** head, char val) {
+void insert_to_linked_list(struct LinkedList_Node** head, int val) {
     struct LinkedList_Node* new_node = malloc(sizeof(struct LinkedList_Node));
     new_node->val = val;
     new_node->next = NULL;
@@ -61,7 +62,7 @@ void insert_to_linked_list(struct LinkedList_Node** head, char val) {
 
 
 // Inserts a value into the HashMap using chaining for collision resolution
-void insert_to_hash_map(struct HashMap* map, char val) {
+void insert_to_hash_map(struct HashMap* map, int val) {
     if (!map || map->size <= 0) return; // Map safty check
     
     // Index based on hash map function
@@ -72,25 +73,38 @@ void insert_to_hash_map(struct HashMap* map, char val) {
 }
 
 
-// Display the hash map and its contents
-void display_hash_map(struct HashMap* map) {
-    printf("Index | Linked list\n");
-    printf("------+------------\n");
+bool search_in_hash_map(struct HashMap* map, int val) {
+    if (!map || map->size <= 0) return false; // Map safty check
 
-    for (int i = 0; i < map->size; i++) {
-        struct LinkedList_Node* current = map->hash_buckets[i];
+    // Index based on hash map function
+    int index = hash_map_function(val, map->size);
 
-        printf("%5d | [", i);
-        while (current != NULL) {
-            printf("%c", current->val);
-            current = current->next;
-
-            if (current != NULL) {
-                printf(", ");
-            }
+    // Search for the value in the linked list at the computed index
+    struct LinkedList_Node* current = map->hash_buckets[index];
+    while (current != NULL) {
+        if (current->val == val) {
+            return true; // Value found
         }
-        printf("]\n");
+        current = current->next;
     }
+
+    return false; // Value not found
+}
+
+
+// Display the hash map and its contents
+void display_two_sum_result(int arr[], int target, struct TwoSumResult result, int arrSize) {
+    printf("Input array: [");
+    for (int i = 0; i < arrSize; i++) {
+        printf("%d", arr[i]);
+        if (i < arrSize - 1) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    printf("Target: %d\n", target);
+    printf("Indices: (%d, %d)\n", result.index1, result.index2);
+    printf("\n");
 }
 
 
@@ -113,27 +127,30 @@ void free_hash_map_and_contents(struct HashMap* map) {
 
 
 // Two sum test code
-struct TwoSumResult two_sum(int* arr, int target, int size) {
-    struct HashMap* map = create_hash_map(size);
+struct TwoSumResult two_sum(int arr[], int target, int mapSize, int arrSize) {
+    struct HashMap* map = create_hash_map(mapSize);
     struct TwoSumResult result = {-1, -1};
 
-    for (int i=0; i < (sizeof arr) / (sizeof arr[0]); i++) {
-        char complement = target - arr[i];
-        int index = hash_map_function(complement, map->size);
-        struct LinkedList_Node* current = map->hash_buckets[index];
+    for (int i=0; i < arrSize; i++) {
+        int complement = target - arr[i];
 
-        while (current != NULL) {
-            if (current->val == complement) {
-                result.index1 = i;
-                result.index2 = index; // This is a simplification; in a real scenario, you'd need to track the actual index of the complement
-                free_hash_map_and_contents(map);
-                return result;
+        if (search_in_hash_map(map, complement)) {
+            result.index1 = i;
+            // Find the index of the complement in the original array
+            int j = 0;
+            while (result.index2 == -1) {
+                if (arr[j] == complement) {
+                    result.index2 = j;
+                    break;
+                }
+                j++;
             }
-            current = current->next;
+            break; // Exit the loop once a valid pair is found
         }
-
         insert_to_hash_map(map, arr[i]);
     }
+
+    free_hash_map_and_contents(map); // Free the hash map and its contents
 
     return result;
 } 
@@ -141,11 +158,19 @@ struct TwoSumResult two_sum(int* arr, int target, int size) {
 
 // Driver code to test the hash map implementation
 int main() {
-    int n = 10; // Size of the hash map
+    int n = 8; // Size of the hash map
 
     int arr1[] = {2, 7, 11, 15};
-    struct TwoSumResult result1 = two_sum(arr1, 9, n);
-    // display
+    struct TwoSumResult result1 = two_sum(arr1, 9, n, 4);
+    display_two_sum_result(arr1, 9, result1, 4);
+
+    int arr2[] = {3, 5, 9, 14};
+    struct TwoSumResult result2 = two_sum(arr2, 20, n, 4);
+    display_two_sum_result(arr2, 20, result2, 4);
+
+    int arr3[] = {2, 5, 1, 8, 9, 12, 4, 7, 11, 6};
+    struct TwoSumResult result3 = two_sum(arr3, 18, n, 10);
+    display_two_sum_result(arr3, 18, result3, 10);
 
     // End termination
     return 0;
