@@ -5,7 +5,7 @@ def create_hash_map(size):
 
 # Computes and returns the index for a given value in the HashMap
 def hash_map_function(val, size):
-    return val % size
+    return ord(val) % size
 
 
 # Inserts a value into the HashMap using chaining for collision resolution
@@ -45,6 +45,9 @@ def main():
     insert_to_hash_map(hash_map, 'D');
     insert_to_hash_map(hash_map, 'E');
     insert_to_hash_map(hash_map, 'F');
+
+    # Display the contents of the hash map
+    display_hash_map(hash_map)
 
 
 main()
