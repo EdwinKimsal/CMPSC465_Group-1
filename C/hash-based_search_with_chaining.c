@@ -65,6 +65,24 @@ void insert_to_hash_map(struct HashMap* map, char val) {
 }
 
 
+// Free all memory allocated for the hash map and its linked lists
+void free_hash_map_and_contents(struct HashMap* map) {
+    // Empty map safty check
+    if (!map || map->size <= 0) return;
+
+    for (int i = 0; i < map->size; i++) {
+        struct LinkedList_Node* current_linked_list_node = map->hash_buckets[i];
+        while (current_linked_list_node != NULL) {
+            struct LinkedList_Node* temp = current_linked_list_node;
+            current_linked_list_node = current_linked_list_node->next;
+            free(temp);
+        }
+    }
+    free(map->hash_buckets);
+    free(map);
+}
+
+
 // Display the hash map and its contents
 void display_hash_map(struct HashMap* map) {
     printf("Index | Linked list\n");
@@ -85,24 +103,6 @@ void display_hash_map(struct HashMap* map) {
         printf("]\n");
     }
     printf("\n");
-}
-
-
-// Free all memory allocated for the hash map and its linked lists
-void free_hash_map_and_contents(struct HashMap* map) {
-    // Empty map safty check
-    if (!map || map->size <= 0) return;
-
-    for (int i = 0; i < map->size; i++) {
-        struct LinkedList_Node* current_linked_list_node = map->hash_buckets[i];
-        while (current_linked_list_node != NULL) {
-            struct LinkedList_Node* temp = current_linked_list_node;
-            current_linked_list_node = current_linked_list_node->next;
-            free(temp);
-        }
-    }
-    free(map->hash_buckets);
-    free(map);
 }
 
 
