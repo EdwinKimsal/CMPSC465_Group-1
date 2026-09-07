@@ -135,12 +135,12 @@ struct TwoSumResult two_sum(int arr[], int target, int mapSize, int arrSize) {
         int complement = target - arr[i];
 
         if (search_in_hash_map(map, complement)) {
-            result.index1 = i;
+            result.index2 = i;
             // Find the index of the complement in the original array
             int j = 0;
-            while (result.index2 == -1) {
+            while (result.index1 == -1) {
                 if (arr[j] == complement) {
-                    result.index2 = j;
+                    result.index1 = j;
                     break;
                 }
                 j++;
