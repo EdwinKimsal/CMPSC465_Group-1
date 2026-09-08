@@ -32,19 +32,19 @@ def main():
     hash_map = [[] for _ in range(n)]
 
     # Insert values into the HashMap
-    insert_to_hash_map(hash_map, 'a');
-    insert_to_hash_map(hash_map, 'b');
-    insert_to_hash_map(hash_map, 'c');
-    insert_to_hash_map(hash_map, 'd');
-    insert_to_hash_map(hash_map, 'e');
-    insert_to_hash_map(hash_map, 'f');
+    insert_to_hash_map(hash_map, 'a')
+    insert_to_hash_map(hash_map, 'b')
+    insert_to_hash_map(hash_map, 'c')
+    insert_to_hash_map(hash_map, 'd')
+    insert_to_hash_map(hash_map, 'e')
+    insert_to_hash_map(hash_map, 'f')
 
-    insert_to_hash_map(hash_map, 'A');
-    insert_to_hash_map(hash_map, 'B');
-    insert_to_hash_map(hash_map, 'C');
-    insert_to_hash_map(hash_map, 'D');
-    insert_to_hash_map(hash_map, 'E');
-    insert_to_hash_map(hash_map, 'F');
+    insert_to_hash_map(hash_map, 'A')
+    insert_to_hash_map(hash_map, 'B')
+    insert_to_hash_map(hash_map, 'C')
+    insert_to_hash_map(hash_map, 'D')
+    insert_to_hash_map(hash_map, 'E')
+    insert_to_hash_map(hash_map, 'F')
 
     # Display the contents of the hash map
     display_hash_map(hash_map)

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 // Node structure for linked lists
 struct LinkedList_Node {
     char val;
