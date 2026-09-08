@@ -4,7 +4,7 @@
 
 // HashMap structure
 struct HashMap {
-    struct LinkedList_Node** hash_buckets; // A pointer to a pointer (points to the that position's hash bucket)
+    char* hash_buckets; // A pointer to an array of characters (represents the hash buckets)
     int size; // Number of buckets in the hash map
 };
 
@@ -14,10 +14,10 @@ struct HashMap* create_hash_map(int size) {
     struct HashMap* map = malloc(sizeof(struct HashMap));
 
     map->size = size;
-    map->hash_buckets = malloc(size * sizeof(struct LinkedList_Node*));
+    map->hash_buckets = malloc(size * sizeof(char));
 
     for (int i = 0; i < size; i++) {
-        map->hash_buckets[i] = NULL;
+        map->hash_buckets[i] = '\0'; // Initialize each bucket to null character
     }
 
     // Return the pointer to the created hash map
@@ -31,47 +31,33 @@ int hash_map_function(char val, int size) {
 }
 
 
-// Inserts a value into the linked list at the given head pointer
-void insert_to_linked_list(struct LinkedList_Node** head, char val) {
-    struct LinkedList_Node* new_node = malloc(sizeof(struct LinkedList_Node));
-    new_node->val = val;
-    new_node->next = NULL;
-
-    if (*head == NULL) {
-        *head = new_node;
-        return;
-    }
-
-    new_node->next = *head;
-    *head = new_node;
-}
-
-
-// Inserts a value into the HashMap using chaining for collision resolution
+// Inserts a value into the HashMap using linear probing for collision resolution
 void insert_to_hash_map(struct HashMap* map, char val) {
-    if (!map || map->size <= 0) return; // Map safty check
-    
-    // Index based on hash map function
     int index = hash_map_function(val, map->size);
 
-    // Insert the value into the linked list at the computed index
-    insert_to_linked_list(&map->hash_buckets[index], val);
+    if (index < 0 || index >= map->size) return; // Invalid index check
+
+    if (map->hash_buckets[index] == '\0') {
+        map->hash_buckets[index] = val;
+    } else {
+        // Handle collision by finding the next available bucket
+        int original_index = index;
+        do {
+            index = (index + 1) % map->size;
+            if (map->hash_buckets[index] == '\0') {
+                map->hash_buckets[index] = val;
+                return;
+            }
+        } while (index != original_index);
+    }
 }
 
 
-// Free all memory allocated for the hash map and its linked lists
+// Free all memory allocated for the hash map and its contents
 void free_hash_map_and_contents(struct HashMap* map) {
     // Empty map safty check
-    if (!map || map->size <= 0) return;
+    if (!map) return;
 
-    for (int i = 0; i < map->size; i++) {
-        struct LinkedList_Node* current_linked_list_node = map->hash_buckets[i];
-        while (current_linked_list_node != NULL) {
-            struct LinkedList_Node* temp = current_linked_list_node;
-            current_linked_list_node = current_linked_list_node->next;
-            free(temp);
-        }
-    }
     free(map->hash_buckets);
     free(map);
 }
@@ -79,22 +65,11 @@ void free_hash_map_and_contents(struct HashMap* map) {
 
 // Display the hash map and its contents
 void display_hash_map(struct HashMap* map) {
-    printf("Index | Linked list\n");
+    printf("Index | Data\n");
     printf("------+------------\n");
 
     for (int i = 0; i < map->size; i++) {
-        struct LinkedList_Node* current = map->hash_buckets[i];
-
-        printf("%5d | [", i);
-        while (current != NULL) {
-            printf("%c", current->val);
-            current = current->next;
-
-            if (current != NULL) {
-                printf(", ");
-            }
-        }
-        printf("]\n");
+        printf("%5d | %c\n", i, map->hash_buckets[i]);
     }
     printf("\n");
 }
