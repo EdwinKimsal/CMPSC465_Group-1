@@ -81,6 +81,7 @@ class Trie:
         """
         print(".")
         self._display(self.root, prefix="")
+        print("\n")
  
     def _display(self, node, prefix):
         chars = sorted(node.children.keys())
@@ -97,7 +98,6 @@ class Trie:
  
             extension = "    " if is_last else "│   "
             self._display(child, prefix + extension)
-        print("\n")
 
 
 def main():
