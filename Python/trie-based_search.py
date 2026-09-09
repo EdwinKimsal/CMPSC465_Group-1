@@ -97,6 +97,7 @@ class Trie:
  
             extension = "    " if is_last else "│   "
             self._display(child, prefix + extension)
+        print("\n")
 
 
 def main():
