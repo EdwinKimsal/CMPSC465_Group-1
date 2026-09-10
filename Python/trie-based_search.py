@@ -21,8 +21,19 @@ class Trie:
         curr.val = word
         curr.is_end_of_word = True
 
-    def search_word(self, curr):
+    def search_word(self, needle):
+        curr = self.root
         is_end = False
+
+        if needle == "":
+            return ""
+
+        char = list(needle)[0]
+
+        for char in needle:
+            if char not in curr.children:
+                return needle
+            curr = curr.children[char]
 
         while is_end is False:
             if curr.is_end_of_word:
