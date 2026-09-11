@@ -29,7 +29,7 @@ def display_hash_map(hash_map):
 def main():
     n = 10  # Size of the HashMap
 
-    hash_map = [[] for _ in range(n)]
+    hash_map = create_hash_map(n)
 
     # Insert values into the HashMap
     insert_to_hash_map(hash_map, 'a')
