@@ -23,23 +23,20 @@ class Trie:
 
     def search_word(self, needle):
         curr = self.root
-        is_end = False
 
         if needle == "":
             return ""
 
-        char = list(needle)[0]
-
         for char in needle:
             if char not in curr.children:
-                return needle
+                if curr.is_end_of_word:
+                    return needle
+                else:
+                    return ""
             curr = curr.children[char]
 
-        while is_end is False:
-            if curr.is_end_of_word:
-                is_end = True
-            else:
-                curr = next(iter(curr.children.values()))
+        while curr.is_end_of_word is False:
+            curr = next(iter(curr.children.values()))
         return curr.val
 
     def search_node(self, word):
@@ -72,7 +69,7 @@ class Trie:
         for par, char in reversed(path):
             child = par.children[char]
 
-            if child.is_end_of_word == true or len(child.children) > 0:
+            if child.is_end_of_word == True or len(child.children) > 0:
                 break
             del par.children[char]
         return True
